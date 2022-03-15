@@ -16,6 +16,14 @@ var obstacle_5;
 var obstacle_6;
 
 var score;
+var jogar = 1;
+var encerrar = 0;
+var gamestate = jogar;
+
+var grupo_obstacle;
+var grupo_nuvens;
+var grupo_star;
+
 
 
 
@@ -47,16 +55,18 @@ function setup(){
   
   flor = createSprite (300,180,600,10);
   flor.addImage (flor_ing);
-  flor.velocityX = -2;
   
   flor_inv = createSprite (300,200,600,10);
   flor_inv.visible = false;
 
-//sprite de Trex
+  //sprite de Trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
   trex.scale = 0.3;
-  
+
+  grupo_obstacle = createGroup ();
+  grupo_nuvens = createGroup ();
+  grupo_star = createGroup ();
   
 }
 
@@ -67,28 +77,41 @@ function draw(){
   //console.log (trex.y);
   //console.log (frameCount);
   //console.log (Math.PI);
-  
 
-  text(mouseX + "," + mouseY,mouseX,mouseY);
+  if (gamestate == jogar){
 
-  if (mousePressedOver (trex) && trex.y >= 180){
+     if (mousePressedOver (trex) && trex.y >= 180){
 
     trex.velocityY = -11;
-  }
+    }
 
-  if (flor.x < 0){
+    if (flor.x < 0){
     flor.x = flor.width/2;
+    }
+
+    trex.velocityY = trex.velocityY + 0.8;
+    score = score + Math.round (frameCount/1);
+    flor.velocityX = -2;
+  
+  } else if (gamestate == encerrar){
+
+    flor.velocity = 0;
   }
 
-  trex.velocityY = trex.velocityY + 0.8;
+ 
+  
+
+  //lua.depth = cloud.depth;
+  //cloud.depth = cloud.depth + 1;
+
+  text(mouseX + "," + mouseY,mouseX,mouseY);
   
   trex.collide (flor_inv);
 
   score = 0;
-  score = score + Math.round (frameCount/1);
+  
   fill ("White");
   text ("Distancia Percorrida: " + score + " Metros", 25, 23);
-  
 
   spawnCloud ();
   spawnStar ();
@@ -106,13 +129,8 @@ function spawnCloud (){
   cloud.addImage (cloud_ing);
   cloud.scale = 0.9;
   cloud.y = Math.round (random (10,100));
-  
+  grupo_nuvens.add(cloud);
   }
-
-  //lua.depth = cloud.depth;
-  //cloud.depth = cloud.depth + 1;
-
-  
 }
 
 function spawnStar (){
@@ -127,6 +145,8 @@ function spawnStar (){
     star.lifetime = 400;
 
   }
+
+  grupo_star.add(star);
 
 }
 
@@ -172,14 +192,9 @@ function spawnCactus (){
 
     obstacle.lifetime = 200;
 
-  }
-
-  if (score %250 == 0){
-
-    obstacle.velocityX = obstacle.velocityX - 3;
-
+    grupo_obstacle.add(obstacle);
   }
 }
 
 
-  
+
