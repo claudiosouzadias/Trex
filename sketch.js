@@ -32,6 +32,8 @@ var inv;
 var restart,restart_ing;
 var game_over,game_overING;
 
+var time;
+
 
 
 function preload(){
@@ -52,7 +54,7 @@ function preload(){
 
   trex_collide = loadAnimation ("trex_collided.png");
 
-  restart_ING = loadImage ("RESTART.png");
+  restart_ing = loadImage ("RESTART.png");
   game_overING = loadImage ("gameOver.png");
   
 }
@@ -82,26 +84,43 @@ function setup(){
   grupo_nuvens = createGroup ();
   grupo_star = createGroup ();
 
-  restart = createSprite (100,100);
-  restart.addImage ("acabou pra você",restart_ing);
-  restart.visible = false;
-
   game_over = createSprite (300,100);
   game_over.addImage ("Perdeu playboy",game_overING);
   game_over.visible = false;
+  game_over.scale = 0.5;
 
-  trex.addAnimation ("perdeu", trex_collide);
+  restart = createSprite (160,100);
+  restart.addImage ("acabou pra você",restart_ing);
+  restart.visible = false;
+  restart.scale = 0.5;
 
   
+
+  trex.addAnimation ("perdeu", trex_collide);
 }
 
 function draw(){
 
   background("black");
 
+  if (time > 0 && time % 2 == 0){
+
+    background("white");
+
+    fill ("black");
+    text ("Distancia Percorrida: " + score + " Metros", 25, 23);
+
+    text ("Tempo: " + time + " Dinossauro time", 25, 40);
+
+    grupo_star.destroyEach ();
+    lua.destroy ();
+    }
+
 
   fill ("White");
   text ("Distancia Percorrida: " + score + " Metros", 25, 23);
+
+  text ("Tempo: " + time + " Dinossauro time", 25, 40);
   
   
 
@@ -121,10 +140,12 @@ function draw(){
       flor.x = flor.width/2;
      }
 
-    score = score + Math.round (frameRate ()/60);
+    score = score + Math.round(frameRate ()/60);
+
+    time = Math.round(score/300);
 
     trex.velocityY = trex.velocityY + 0.8;
-    flor.velocityX = -( 3 + 2 * score/100);
+    flor.velocityX = -( 3 + 2 * score/50);
 
     inv = createSprite (300,200,600,600);
     inv.visible = false;
@@ -133,9 +154,9 @@ function draw(){
     spawnStar ();
     spawnCactus ();
 
-    if (grupo_obstacle.isTouching (trex)) {
-      gamestate = ENCERRAR;
-    }
+    //if (grupo_obstacle.isTouching (trex)) {
+     // gamestate = ENCERRAR;
+    //}
 
    } else if (gamestate == ENCERRAR){
 
@@ -153,7 +174,7 @@ function draw(){
     trex.changeAnimation ("perdeu", trex_collide);
 
     restart.visible = true;
-    game_state.visible = true;
+    game_over.visible = true;
 
   }
   
@@ -237,7 +258,7 @@ function spawnCactus (){
 
     
 
-    obstacle.velocityX = -3;
+    obstacle.velocityX = -(3 + 3*score/200);
 
     obstacle.lifetime = 200;
 
