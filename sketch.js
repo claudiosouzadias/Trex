@@ -161,7 +161,7 @@ function draw(){
      }
 
     score = score + Math.round(frameRate ()/60);
-    time = Math.round(score/100);
+    time = Math.round(score/300);
 
     trex.velocityY = trex.velocityY + 0.8;
     flor.velocityX = -( 3 + 2 * score/200);
@@ -209,7 +209,6 @@ function draw(){
     }
 
   }
-  
 
   //lua.depth = cloud.depth;
   //cloud.depth = cloud.depth + 1;
@@ -260,7 +259,7 @@ function spawnCactus (){
 
   var rand = Math.round (random (1,6));
 
-  if (frameCount % Math.round (random  (60,200) ) == 0) {
+  if (frameCount % Math.round (random  (60,160) ) == 0) {
 
     obstacle = createSprite (540,180,20,50);
     obstacle.scale = 0.4;
