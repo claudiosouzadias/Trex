@@ -3,7 +3,7 @@ var trex ,trex_running;
 var flor, flor_ing;
 var flor_inv;
 
-var cloud, cloud_ing;
+var cloud,cloud_ing;
 var star, star_ing;
 var lua,lua_ing;
 
@@ -23,6 +23,7 @@ var gamestate = JOGAR;
 var grupo_obstacle;
 var grupo_nuvens;
 var grupo_star;
+//var grupo_lua;
 
 
 var trex_collide;
@@ -33,6 +34,10 @@ var restart,restart_ing;
 var game_over,game_overING;
 
 var time;
+
+var som_die;
+var som_jump;
+var som_checkpoint;
 
 
 
@@ -56,24 +61,31 @@ function preload(){
 
   restart_ing = loadImage ("RESTART.png");
   game_overING = loadImage ("gameOver.png");
+
+  som_die = loadSound("die.mp3");
+  som_jump = loadSound("jump.mp3");
+  som_checkpoint = loadSound("checkpoint.mp3");
   
 }
 
 function setup(){
   createCanvas(600,200);
-  
-  lua = createSprite (270,100);
-  lua.addImage (lua_ing);
-  lua.scale = 0.2;
+
+  game_over = createSprite (300,100);
+  game_over.addImage ("Perdeu playboy",game_overING);
+  game_over.visible = false;
+  game_over.scale = 0.5;
+
+  restart = createSprite (300,130);
+  restart.addImage ("acabou pra você",restart_ing);
+  restart.visible = false;
+  restart.scale = 0.5;
   
   flor = createSprite (300,180,600,10);
   flor.addImage (flor_ing);
   
   flor_inv = createSprite (300,200,600,10);
   flor_inv.visible = false;
-
-  
-
 
   //sprite de Trex
   trex = createSprite(50,160,20,50);
@@ -83,18 +95,8 @@ function setup(){
   grupo_obstacle = createGroup ();
   grupo_nuvens = createGroup ();
   grupo_star = createGroup ();
+  //grupo_lua = createGroup ();
 
-  game_over = createSprite (300,100);
-  game_over.addImage ("Perdeu playboy",game_overING);
-  game_over.visible = false;
-  game_over.scale = 0.5;
-
-  restart = createSprite (160,100);
-  restart.addImage ("acabou pra você",restart_ing);
-  restart.visible = false;
-  restart.scale = 0.5;
-
-  
 
   trex.addAnimation ("perdeu", trex_collide);
 }
@@ -103,24 +105,36 @@ function draw(){
 
   background("black");
 
+  if (time % 1 == 0){
+
+    lua = createSprite (270,100);
+    lua.addImage (lua_ing);
+    lua.visible = true;
+    lua.scale = 0.2;
+    lua.lifetime = 10;
+    
+  }
+
   if (time > 0 && time % 2 == 0){
+
+    lua.destroy ();
+    grupo_star.destroyEach ();
+
 
     background("white");
 
     fill ("black");
     text ("Distancia Percorrida: " + score + " Metros", 25, 23);
 
-    text ("Tempo: " + time + " Dinossauro time", 25, 40);
-
-    grupo_star.destroyEach ();
-    lua.destroy ();
-    }
+    text ("Tempo: " + time + " T-Rex Time", 25, 40);
+    
+  }
 
 
-  fill ("White");
+  fill ("yellow");
   text ("Distancia Percorrida: " + score + " Metros", 25, 23);
 
-  text ("Tempo: " + time + " Dinossauro time", 25, 40);
+  text ("Tempo: " + time + " T-Rex Time", 25, 40);
   
   
 
@@ -129,11 +143,17 @@ function draw(){
   //console.log (Math.PI);
 
   if (gamestate == JOGAR){
-
+    if (score % 100 == 0 && score > 0 ){
+      som_checkpoint.play ();
+    }
 
     if (mousePressedOver (inv) && trex.y >= 180){
 
+    som_jump.play ();
+    //som_jump.setVolume (2);
+
     trex.velocityY = -13;
+    
     }
 
     if (flor.x < 0){
@@ -141,22 +161,28 @@ function draw(){
      }
 
     score = score + Math.round(frameRate ()/60);
-
-    time = Math.round(score/300);
+    time = Math.round(score/100);
 
     trex.velocityY = trex.velocityY + 0.8;
-    flor.velocityX = -( 3 + 2 * score/50);
+    flor.velocityX = -( 3 + 2 * score/200);
 
     inv = createSprite (300,200,600,600);
     inv.visible = false;
 
+    game_over.visible = false;
+    restart.visible = false;
+
     spawnCloud ();
     spawnStar ();
     spawnCactus ();
+   
 
-    //if (grupo_obstacle.isTouching (trex)) {
-     // gamestate = ENCERRAR;
-    //}
+    if (grupo_obstacle.isTouching (trex)) {
+
+     som_die.play ();
+
+     gamestate = ENCERRAR;
+   }
 
    } else if (gamestate == ENCERRAR){
 
@@ -175,6 +201,12 @@ function draw(){
 
     restart.visible = true;
     game_over.visible = true;
+    lua.visible = false;
+    
+
+    if (mousePressedOver(restart)){
+      reiniciar();
+    }
 
   }
   
@@ -182,6 +214,7 @@ function draw(){
   //lua.depth = cloud.depth;
   //cloud.depth = cloud.depth + 1;
 
+  // Lugar do mouse e pro texto seguir o mouse
   text(mouseX + "," + mouseY,mouseX,mouseY);
   
   trex.collide (flor_inv);
@@ -191,8 +224,9 @@ function draw(){
 
 function spawnCloud (){
 
-  if (frameCount %60 == 0){
 
+  if (frameCount %60 == 0){
+  
    cloud = createSprite (575,10);
    cloud.velocityX = -3;
    cloud.addImage (cloud_ing);
@@ -202,7 +236,6 @@ function spawnCloud (){
   
   }
 
-  
 }
 
 function spawnStar (){
@@ -216,6 +249,8 @@ function spawnStar (){
     star.y = Math.round (random (10,100));
     star.lifetime = 400;
     grupo_star.add(star);
+
+   
   }
   
 
@@ -230,9 +265,6 @@ function spawnCactus (){
     obstacle = createSprite (540,180,20,50);
     obstacle.scale = 0.4;
   
-    
-    
-
     switch (rand){
       
       case 1: obstacle.addImage (obstacle_1);
@@ -271,6 +303,23 @@ function spawnCactus (){
     }
   }
 }
+
+function reiniciar(){
+
+  console.log ("Acabou");
+  gamestate = JOGAR;
+
+  grupo_obstacle.destroyEach();
+  grupo_nuvens.destroyEach();
+  grupo_star.destroyEach ();
+
+  trex.changeAnimation ("running",trex_running);
+
+  score = 0;
+  time = 0;
+
+}
+
 
 
 
