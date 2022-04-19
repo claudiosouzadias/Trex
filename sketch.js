@@ -69,26 +69,27 @@ function preload(){
 }
 
 function setup(){
-  createCanvas(600,200);
 
-  game_over = createSprite (300,100);
+  createCanvas(windowWidth,windowHeight);
+
+  game_over = createSprite (300,height/2 + 70);
   game_over.addImage ("Perdeu playboy",game_overING);
   game_over.visible = false;
   game_over.scale = 0.5;
 
-  restart = createSprite (300,130);
+  restart = createSprite (300,height/2 + 100);
   restart.addImage ("acabou pra você",restart_ing);
   restart.visible = false;
   restart.scale = 0.5;
   
-  flor = createSprite (300,180,600,10);
+  flor = createSprite (300,height/1 - 50,600,10);
   flor.addImage (flor_ing);
   
-  flor_inv = createSprite (300,200,600,10);
+  flor_inv = createSprite (300,height/1 - 30,600,10);
   flor_inv.visible = false;
 
   //sprite de Trex
-  trex = createSprite(50,160,20,50);
+  trex = createSprite(50,height/1 - 50,20,50);
   trex.addAnimation("running", trex_running);
   trex.scale = 0.3;
 
@@ -102,6 +103,8 @@ function setup(){
 }
 
 function draw(){
+
+  console.log (trex.y);
 
   background("black");
 
@@ -117,7 +120,7 @@ function draw(){
 
   if (time > 0 && time % 2 == 0){
 
-    lua.destroy ();
+    lua.visible = false;
     grupo_star.destroyEach ();
 
 
@@ -147,12 +150,14 @@ function draw(){
       som_checkpoint.play ();
     }
 
-    if (mousePressedOver (inv) && trex.y >= 180){
+    if (mousePressedOver (inv) && trex.y >= 297 || touches.lenght > 0){
 
     som_jump.play ();
     //som_jump.setVolume (2);
 
     trex.velocityY = -13;
+    touches = [];
+    // ];
     
     }
 
@@ -261,7 +266,7 @@ function spawnCactus (){
 
   if (frameCount % Math.round (random  (60,160) ) == 0) {
 
-    obstacle = createSprite (540,180,20,50);
+    obstacle = createSprite (width,height - 50,20,50);
     obstacle.scale = 0.4;
   
     switch (rand){
@@ -318,6 +323,8 @@ function reiniciar(){
   time = 0;
 
 }
+
+
 
 
 
