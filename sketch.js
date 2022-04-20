@@ -150,7 +150,7 @@ function draw(){
       som_checkpoint.play ();
     }
 
-    if (mousePresseOver (inv) && trex.y >= 297 || touches.lenght > 0){
+    if (mousePressedOver (inv) && trex.y >= 297 || touches.lenght > 0){
 
     som_jump.play ();
     //som_jump.setVolume (2);
