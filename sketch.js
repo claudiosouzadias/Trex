@@ -138,8 +138,7 @@ function draw(){
   text ("Distancia Percorrida: " + score + " Metros", 25, 23);
 
   text ("Tempo: " + time + " T-Rex Time", 25, 40);
-  
-  
+
 
   //console.log (trex.y);
   //console.log (frameCount);
@@ -157,7 +156,7 @@ function draw(){
 
     trex.velocityY = -13;
     touches = [];
-    // ]; 
+    // ];
     
     }
 
@@ -323,9 +322,6 @@ function reiniciar(){
   time = 0;
 
 }
-
-
-
 
 
 
