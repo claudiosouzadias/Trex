@@ -10,3 +10,11 @@ Jogo didático em JavaScript, focado em aprender sobre gerações infinitas atra
   # :hammer: Técnicas e tecnlogias utilizadas
 
 - `JavaScript` 
+
+# 📁 Acesso ao projeto
+
+**Você pode acessar o [site](https://z3r1nh0.github.io/Trex/) diretamente ou [baixar](https://github.com/Z3R1NH0/Trex.git) o arquivo.**
+
+# 🛠️ Abrir e rodar o projeto
+
+Ao baixar o arquivo você pode executa-lo com qualquer editor compativel com JavaScript, neste projeto foi usado Visual Studio Code.
