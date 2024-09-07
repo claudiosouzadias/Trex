@@ -13,7 +13,7 @@ Jogo didático em JavaScript, focado em aprender sobre gerações infinitas atra
 
 # 📁 Acesso ao projeto
 
-**Você pode acessar o [site](https://z3r1nh0.github.io/Trex/) diretamente ou [baixar](https://github.com/Z3R1NH0/Trex.git) o arquivo.**
+**Você pode acessar o [site](trex-sigma.vercel.app) diretamente ou [baixar](https://github.com/Z3R1NH0/Trex.git) o arquivo.**
 
 # 🛠️ Abrir e rodar o projeto
 
